@@ -1,5 +1,5 @@
-# HelpOut
-## No one left out in the cold
+# HelpOut - ## No one left out in the cold
+
 General Assembly Third Project - Group 7
 
 ##Summary
