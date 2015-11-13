@@ -77,8 +77,12 @@ app.controller('closedPostsCtrl', ['$routeParams', '$http', function ($routePara
 app.controller('singlePostCtrl', ['$routeParams', '$http', function ($routeParams, $http) {
 	var post = $routeParams.index;
 	var controller = this;
+
 	$http.get('/posts.json').success(function (data) {
 		controller.currentPost = data.posts[post];
+		console.log(controller.currentPost.id)
+
+		controller.getPostsComments(data.posts[post]);
 	});
 	controller.getCurrentResponder = function () {
 		$http.get('/session.json').success(function (responderData) {
@@ -86,12 +90,22 @@ app.controller('singlePostCtrl', ['$routeParams', '$http', function ($routeParam
 		})
 	};
 	controller.getCurrentResponder();
+
+	controller.getPostsComments = function () {
+		$http.get('/comments_all/' + $routeParams.index).success(function (commentData) {
+			controller.comments = commentData;
+			console.log(controller.comments);
+		})
+	};
+	controller.getPostsComments();
 }]);
 
-app.controller('postCommentsCtrl', ['$http', '$scope', function ($http, $scope) {
+app.controller('postCommentsCtrl', ['$http', '$scope', '$routeParams', function ($http, $scope, $routeParams) {
 	var authenticity_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 	var controller = this;
+
 	controller.createComment = function () {
+		console.log("Let's make a comment");
 		$http.post('/comments', {
 			authenticity_token: authenticity_token,
 			comment: {
